@@ -8,10 +8,10 @@ import java.net.*;
  */
 public class Client
 {
-    public Client() throws IOException
+    public static void main(String[] args) throws IOException
     {
         // 1、创建客户端对象（发韭菜出去的人）
-        DatagramSocket socket = new DatagramSocket(6666);
+        DatagramSocket socket = new DatagramSocket(7777);
 
         // 2、创建数据包对象封装要发出去的数据（创建一个韭菜盘子）
         /* public DatagramPacket(byte buf[], int length,
