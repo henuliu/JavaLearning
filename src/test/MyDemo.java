@@ -1,6 +1,4 @@
-package swing;
-
-import java.io.IOException;
+package test;
 
 public class MyDemo
 {
@@ -8,7 +6,7 @@ public class MyDemo
     {
     }
 
-    public static void main(String[] args) throws IOException
+    public static void main(String[] args)
     {
         new LoginWindow("登录界面", 500, 500);
     }

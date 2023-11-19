@@ -1,4 +1,4 @@
-package day06.v5;
+package day06.v6;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,6 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 
 public class Server
 {
@@ -19,7 +20,6 @@ public class Server
     {
 
         ServerSocket serverSocket = new ServerSocket(8888);
-
         System.out.println("我是服务器, 启动了，客户端快来连接我吧。。。");
 
         // 接收多个客户端的连接
@@ -31,27 +31,9 @@ public class Server
 //          服务器为每一个客户端都会创建一条线程 专门为这个客户端服务： 读取这个客户端任意时刻发送过来的数据 并针对性的处理 比如给客户端响应数据
             ServerThread serverThread = new ServerThread(socket);
             serverThread.start();
-////      准备给客户端写数据
-//            PrintStream printStream = new PrintStream(socket.getOutputStream());
 
-            // 服务器端读取任意时刻客户端发送过来的数据!!!
-//         1 打印到服务器自己的控制台
-//         2 给客户端返回去同样的信息
-//            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//
-//            String line = null;
-//
-//            while( (line = bufferedReader.readLine()) != null  )
-//            {
-//                System.out.println("--------------------------------------------------");
-//                System.out.println("我是服务器， 我收到客户端发送数据: " + line);
-//
-//                printStream.println(line);
-//                printStream.flush();
-//
-//                System.out.println("我是服务器， 我给客户端返回同样的数据: " + line);
-//            }
         }
+
     }
 }
 
@@ -63,6 +45,7 @@ public class Server
  */
 class ServerThread extends Thread
 {
+
     private Socket socket;
 
     public ServerThread(Socket socket)
@@ -73,6 +56,7 @@ class ServerThread extends Thread
     @Override
     public void run()
     {
+
         try
         {
             PrintStream printStream = new PrintStream(socket.getOutputStream());
@@ -87,7 +71,7 @@ class ServerThread extends Thread
                 System.out.println("我是服务器， 我收到客户端发送数据: " + line);
 
                 // 定义一个变量 存储服务器准备给客户端返回的信息
-                String returnMessage;
+                String returnMessage = "";
 
                 // 首先把客户端发送过来的消息 用逗号隔开 返回的是字符串的数组
                 // 注册登录 1,zs
@@ -100,6 +84,7 @@ class ServerThread extends Thread
                 {
                     String name = strings[1];
 
+
                     boolean flag = Server.clientNameAndSockets.containsKey(name);// map的containsKey判断这个key
 
                     if (flag)
@@ -107,10 +92,22 @@ class ServerThread extends Thread
                         returnMessage = "1,nook,name is exist!";
                     } else
                     {
-                        returnMessage = "1,ok";
 
                         // 名字可用，保存到服务器里边 相当于同时也登录成功了
                         Server.clientNameAndSockets.put(name, socket);
+
+                        returnMessage = "1,ok," + name;
+
+                        Set<String> onlineNames = Server.clientNameAndSockets.keySet();
+
+                        for (String onlineName : onlineNames)
+                        {
+                            if (!onlineName.equals(name))
+                            {
+                                returnMessage += "," + onlineName;
+                            }
+                        }
+
                     }
 
                     printStream.println(returnMessage);

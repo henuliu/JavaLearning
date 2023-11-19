@@ -4,6 +4,10 @@ import java.util.Hashtable;
 
 public class test
 {
+    public static void fun()
+    {
+
+    }
     public static void main(String[] args)
     {
         HashSet<Integer>hashSet=new HashSet<>();
@@ -16,4 +20,11 @@ public class test
         }
     }
 
+}
+class stu
+{
+    public void fun1()
+    {
+        test.fun();
+    }
 }

@@ -1,14 +1,18 @@
 package day06.v2;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.Socket;
-import java.util.Scanner;
 
-public class Client {
+public class Client
+{
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException
+    {
 
-        Socket socket = new Socket("localhost" , 8888);
+        Socket socket = new Socket("localhost", 8888);
         System.out.println("我是客户端, 我连接到服务器了。。。");
 
 //       创建并启动ClientThread ： 接收服务器任意时刻返回来的数据
@@ -29,7 +33,7 @@ public class Client {
 
         String line = null;
 
-        while( (line = bufferedReaderForSystemIn.readLine()) != null ) // 读取任意时刻键盘输入 不是null 意思就是读到一行数据 执行循环体 ，如果没读到 一直读 线程阻塞
+        while ((line = bufferedReaderForSystemIn.readLine()) != null) // 读取任意时刻键盘输入 不是null 意思就是读到一行数据 执行循环体 ，如果没读到 一直读 线程阻塞
         {
             System.out.println("--------------------------------------------------");
             System.out.println("我是客户端， 我读取到了键盘输入的数据，准备给服务器发送: " + line);
@@ -59,7 +63,7 @@ public class Client {
 }
 
 /**
- *  客户端接收服务器任意时刻返回来的数据
+ * 客户端接收服务器任意时刻返回来的数据
  */
 class ClientThread extends Thread
 {
@@ -72,20 +76,22 @@ class ClientThread extends Thread
 
     // 方法重写 有个规则 子类不能抛出异常到父类的方法签名
     @Override
-    public void run() /*throws IOException*/{
+    public void run() /*throws IOException*/
+    {
 
         // try catch是解决编译时异常的方法 ，制定预案， 如果发生了，怎么做 一般就是打印到控制台 让程序员看到 就知道怎么解决了
-        try {
+        try
+        {
             // 客户端读取任意时刻服务器发送过来的数据!!!
             BufferedReader bufferedReaderForServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             String lineForServer = null;
 
-            while( (lineForServer = bufferedReaderForServer.readLine()) != null  )
+            while ((lineForServer = bufferedReaderForServer.readLine()) != null)
             {
                 System.out.println("我是客户端， 我收到服务器发送数据: " + lineForServer);
             }
-        }catch (IOException ioException)
+        } catch (IOException ioException)
         {
             ioException.printStackTrace();
         }

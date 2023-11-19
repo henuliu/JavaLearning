@@ -4,20 +4,40 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.*;
+import java.net.Socket;
 
 //继承JFrame类，自定义一个创建窗口的子类
 public class LoginWindow extends JFrame
 {
+    private static Socket socket;
     private JTextField usernameField;
+
+    private String getUserName()
+    {
+        return this.usernameField.getText();
+    }
+
+    private String getPassword()
+    {
+        String passWord=new String(this.passwordField.getPassword());
+        return passWord;
+    }
+
+    private String CheckUser(String UserName,String PassWord)
+    {
+        return UserName+","+PassWord;
+    }
     private JPasswordField passwordField;
 
-    public LoginWindow(String title, int Weight, int Height)
+    public LoginWindow(String title, int Weight, int Height) throws IOException
     {
+
         // =============== 初始化窗口 ===============
         super(title);
 
+        // 创建Socket并连接服务器
+        socket = new Socket("localhost", 8888);
         //关闭窗口时退出整个进程
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -52,8 +72,8 @@ public class LoginWindow extends JFrame
         LoginButton.setBounds(120, 120, 80, 30);
         this.add(LoginButton);
 
-        // =============== 进行登录验证 ===============
-        // 给登录按钮添加事件监听器,用MySQL验证账号密码是否正确
+        // =============== 连接服务器并验证数据 ===============
+        // 给登录按钮添加事件监听器,在服务端验证账号密码是否正确
         LoginButtonListener loginButtonListener = new LoginButtonListener();
         LoginButton.addActionListener(loginButtonListener);
         this.setVisible(true);
@@ -61,72 +81,53 @@ public class LoginWindow extends JFrame
 
     private class LoginButtonListener implements ActionListener
     {
-        private LoginButtonListener()
-        {
-        }
-
         public void actionPerformed(ActionEvent e)
         {
-            // 连接MySQL
-            String url = "jdbc:mysql://localhost:3306/user";
-            String uid = "root";
-            String passWord = "2754686220ljh";
+            String UserName=LoginWindow.this.getUserName();
+            String PassWord=LoginWindow.this.getPassword();
+            if (!UserName.isEmpty() && !PassWord.isEmpty())
+            {
+                try
+                {
+                    Socket socket = new Socket("localhost", 8888);
+                    LoginWindow.socket = socket;
+                    System.out.println("客户端已经成功连接服务器");
+                    // 客户端给服务端发送表单数据进行验证
+                    PrintStream printStream = new PrintStream(LoginWindow.socket.getOutputStream());
+                    printStream.println(CheckUser(UserName,PassWord));
+                    printStream.flush();
+                    System.out.println("客户端已发送数据");
 
-            // 用MySQL查询语句进行验证
-            ConnectMySQL LoginConn = new ConnectMySQL(url, uid, passWord);
-            String UserName = LoginWindow.this.usernameField.getText();
-            String PassWord = new String(LoginWindow.this.passwordField.getPassword());
-            String cmd = "select * from login where UserName='" + UserName + "' and PassWord='" + PassWord + "'";
-            ResultSet resultSet = null;
-            try
-            {
-                if (!UserName.isEmpty() && !PassWord.isEmpty())
-                {
-                    try
+                    // 客户端读取服务器发送过来的数据
+                    BufferedReader bufferedReaderForServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    String result=bufferedReaderForServer.readLine();
+                    System.out.println("客户端成功接收验证数据");
+                    if (result.equals("true"))
                     {
-                        resultSet = LoginConn.queryExecute(cmd);
+                        JOptionPane.showMessageDialog(null, "登录成功");
+                        System.out.println("登录密码为：" + PassWord);
+                        ChatRoomWindow main = new ChatRoomWindow();
+                        main.setVisible(true);
+                        // 关闭登录界面
+                        LoginWindow.this.dispose();
                     }
-                    catch (SQLException ex)
+                    else
                     {
-                        throw new RuntimeException(ex);
-                    }
-                    try
-                    {
-                        if (resultSet.next())
-                        {
-                            JOptionPane.showMessageDialog((Component) null, "登录成功");
-                            System.out.println("登录密码为：" + PassWord);
-                            MainWindow main = new MainWindow();
-                            main.setVisible(true);
-                            LoginWindow.this.dispose();
-                        } else
-                        {
-                            JOptionPane.showMessageDialog((Component) null, "用户名或密码错误!请重试");
-                        }
-                    }
-                    catch (SQLException ex)
-                    {
-                        throw new RuntimeException(ex);
+                        JOptionPane.showMessageDialog((Component) null, "用户名或密码错误!请重试");
                     }
                 }
-                else
+                catch (IOException ex)
                 {
-                    JOptionPane.showMessageDialog((Component) null, "账号或密码不能为空");
-                    System.out.println("账号或密码为空");
+                    JOptionPane.showMessageDialog(null, "无法连接到服务器：服务器可能已关闭");
+                    ex.printStackTrace();
                 }
+
             }
-            finally
+            // 账号密码为空
+            else
             {
-                if (resultSet != null)
-                {
-                    try
-                    {
-                        resultSet.close();
-                    } catch (SQLException var17)
-                    {
-                        throw new RuntimeException(var17);
-                    }
-                }
+                JOptionPane.showMessageDialog((Component) null, "账号或密码不能为空");
+                System.out.println("账号或密码为空");
             }
         }
     }
