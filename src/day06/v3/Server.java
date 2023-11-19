@@ -7,18 +7,16 @@ import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server
-{
+public class Server {
 
-    public static void main(String[] args) throws IOException
-    {
+    public static void main(String[] args)  throws IOException {
 
         ServerSocket serverSocket = new ServerSocket(8888);
 
         System.out.println("我是服务器, 启动了，客户端快来连接我吧。。。");
 
         // 接收多个客户端的连接
-        while (true)
+        while(true)
         {
             Socket socket = serverSocket.accept();
             System.out.println("我是服务器, 有客户端连接到了。。。");
@@ -56,14 +54,14 @@ public class Server
 
 
 /**
- * 服务器为每一个客户端都会创建一条线程 专门为这个客户端服务
- * <p>
- * 读取这个客户端任意时刻发送过来的数据 并针对性的处理 比如给客户端响应数据
+ *  服务器为每一个客户端都会创建一条线程 专门为这个客户端服务
+ *
+ *  读取这个客户端任意时刻发送过来的数据 并针对性的处理 比如给客户端响应数据
  */
 class ServerThread extends Thread
 {
 
-    private Socket socket;
+    private  Socket socket;
 
     public ServerThread(Socket socket)
     {
@@ -71,8 +69,7 @@ class ServerThread extends Thread
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
 
         try
         {
@@ -82,7 +79,7 @@ class ServerThread extends Thread
 
             String line = null;
 
-            while ((line = bufferedReader.readLine()) != null)
+            while( (line = bufferedReader.readLine()) != null  )
             {
                 System.out.println("--------------------------------------------------");
                 System.out.println("我是服务器， 我收到客户端发送数据: " + line);
@@ -93,8 +90,7 @@ class ServerThread extends Thread
                 System.out.println("我是服务器， 我给客户端返回同样的数据: " + line);
             }
 
-        } catch (IOException ioException)
-        {
+        }catch (IOException ioException){
             ioException.printStackTrace();
         }
 
