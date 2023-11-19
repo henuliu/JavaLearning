@@ -9,7 +9,7 @@ public class ThreadTest1
         Thread t = new MyThread();
         // 4、启动线程（自动执行run方法的）
         t.start();
-        for (int i = 1; i <= 5; i++)
+        for (int i = 1; i <= 10; i++)
         {
             System.out.println("主线程main输出：" + i);
         }
