@@ -12,11 +12,13 @@ public class ConnectMySQL
         String passWord="2754686220ljh";
         ConnectMySQL conn=new ConnectMySQL(url,uid,passWord);
         String cmd="select * from login where UserName='admin' and PassWord='1234567'";
-        ResultSet resultSet=conn.queryExecute(cmd);
-        System.out.println(resultSet.next());
+
+        // 执行数据库语句
+        conn.queryExecute(cmd);
+
     }
     // 构造函数用于连接MySQL
-    public ConnectMySQL(String url,String uid,String passWord)
+    public ConnectMySQL(String url,String uid,String passWord) throws SQLException
     {
         //注册驱动
         try
@@ -39,10 +41,28 @@ public class ConnectMySQL
             throw new RuntimeException(e);
         }
     }
+
+    // 执行查询操作
     public ResultSet queryExecute(String cmd) throws SQLException
     {
         //获取执行SQL的对象Statement
         Statement statement = connection.createStatement();
-        return statement.executeQuery(cmd);
+        ResultSet resultSet= statement.executeQuery(cmd);
+        System.out.println(resultSet.next());
+
+        // 关闭数据库
+        statement.close();
+        resultSet.close();
+        this.connection.close();
+
+        // 返回结果集
+        return resultSet;
+    }
+
+    // 关闭数据库
+    public void closeConnection() throws SQLException
+    {
+        this.connection.close();
+
     }
 }

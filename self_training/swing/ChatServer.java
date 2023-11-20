@@ -33,10 +33,8 @@ public class ChatServer
             //服务器为每一个客户端都会创建一条线程 专门为这个客户端服务： 读取这个客户端任意时刻发送过来的数据 并针对性的处理 比如给客户端响应数据
             ServerThread serverThread = new ServerThread(socket);
             serverThread.start();
-
         }
     }
-
 }
 
 /**
@@ -51,6 +49,7 @@ class ServerThread extends Thread
         this.socket=socket;
     }
 
+    // 利用MySQL验证账号密码是否正确
     private boolean validateLogin(String input) throws SQLException
     {
         String []inputs=input.split(",");
@@ -67,7 +66,9 @@ class ServerThread extends Thread
         // 用MySQL查询语句进行验证
         ConnectMySQL LoginConn = new ConnectMySQL(url, uid, passWord);
         String cmd = "select * from login where UserName='" + UserName + "' and PassWord='" + PassWord + "'";
-        ResultSet resultSet = null;
+
+        // 定义结果集，用来接收数据库返回的信息
+        ResultSet resultSet;
 
         // 执行SQL查询语句，返回结果集
         resultSet = LoginConn.queryExecute(cmd);
@@ -80,8 +81,8 @@ class ServerThread extends Thread
             return false;
         }
     }
-    // 验证账号密码是否正确
 
+    // 处理登录信息，并返回给客户端结果
     private void LoginCheck(String input) throws SQLException, IOException
     {
         // 对接收到的账号密码信息进行验证
@@ -102,6 +103,8 @@ class ServerThread extends Thread
             printStream.flush();
         }
     }
+
+    // 线程主方法
     @Override
     public void run()
     {
@@ -110,6 +113,8 @@ class ServerThread extends Thread
             // 接收账号密码信息
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String input = reader.readLine(); // 客户端发送的是"username,password"格式的字符串
+
+            // 开始验证账号密码并给客户端返回结果
             LoginCheck(input);
         }
         catch (IOException e)
