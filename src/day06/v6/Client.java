@@ -123,7 +123,5 @@ class ClientThread extends Thread
         {
             ioException.printStackTrace();
         }
-
-
     }
 }
