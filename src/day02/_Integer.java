@@ -6,6 +6,6 @@ public class _Integer
     {
         Integer integer=98;
         System.out.println(Math.PI);
-        Character character=new Character('a');
+        System.out.println(integer.floatValue());
     }
 }

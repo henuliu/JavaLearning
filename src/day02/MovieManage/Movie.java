@@ -1,5 +1,8 @@
 package day02.MovieManage;
 
+import lombok.Data;
+
+@Data
 public class Movie
 {
     private int id;
@@ -21,62 +24,6 @@ public class Movie
         this.score = score;
         this.director = director;
         this.actor = actor;
-        this.info = info;
-    }
-
-    public int getId()
-    {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public double getScore() {
-        return score;
-    }
-
-    public void setScore(double score) {
-        this.score = score;
-    }
-
-    public String getDirector() {
-        return director;
-    }
-
-    public void setDirector(String director) {
-        this.director = director;
-    }
-
-    public String getActor() {
-        return actor;
-    }
-
-    public void setActor(String actor) {
-        this.actor = actor;
-    }
-
-    public String getInfo() {
-        return info;
-    }
-
-    public void setInfo(String info) {
         this.info = info;
     }
 }
