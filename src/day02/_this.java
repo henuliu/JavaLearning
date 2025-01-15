@@ -1,5 +1,8 @@
 package day02;
 
+/*
+ * this表示当前调用的对象
+ */
 class Student
 {
     public int age=20;
@@ -26,6 +29,7 @@ class StuName
 }
 
 public class _this {
+
     public static void main(String[] args)
     {
         Student student1=new Student();

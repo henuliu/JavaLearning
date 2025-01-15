@@ -12,8 +12,5 @@ public class TestClone
         System.out.println(u2.getUsername());
         System.out.println(u2.getPassword());
         System.out.println(u2.getScores());
-
-
     }
-
 }

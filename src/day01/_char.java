@@ -27,12 +27,13 @@ public class _char {
         System.out.printf("浮点型变量的值为 " +
                 "%f, 整型变量的值为 " +
                 " %d, 字符串变量的值为 " +
-                "is %s", floatVar, intVar, stringVar);
+                "is %s\n", floatVar, intVar, stringVar);
 
         /*在使用 StringBuffer 类时，每次都会对 StringBuffer 对象本身进行操作，而不是生成新的对象，
         所以如果需要对字符串进行修改推荐使用 StringBuffer*/
         StringBuffer strbuffer=new StringBuffer("liujunhao");
         strbuffer.append("age:20");
+        System.out.println(strbuffer);
 
     }
 }

@@ -1,24 +1,12 @@
-import java.io.*;
-import java.util.HashSet;
-import java.util.Hashtable;
-
+/**
+ * @author panda
+ * @version 1.0
+ */
 public class test
 {
-    public static void fun()
-    {
-
-    }
     public static void main(String[] args)
     {
-        long lastHeartbeatTime = System.currentTimeMillis();
-        System.out.println(lastHeartbeatTime);
-    }
-
-}
-class stu
-{
-    public void fun1()
-    {
-        test.fun();
+        Object obj = new Object();
+        System.out.println(obj.toString());
     }
 }
